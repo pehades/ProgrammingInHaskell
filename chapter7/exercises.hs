@@ -64,3 +64,26 @@ uncurry f = \(x, y) -> f x y
 --test uncurry
 --addCustom2 :: Int -> Int -> Int
 --addCustom2 x y = x + y
+
+-- Exercise 6
+unfold :: (a -> Bool) -> (a -> b) -> (a -> a) -> a -> [b]
+unfold p h t x | p x = []
+               | otherwise = h x : unfold p h t (t x)
+
+-- int2bin = unfold (==0) (`mod` 2) (`div` 2)
+
+type Bit = Int
+
+chop8InTermsOfUnfold :: [Int] -> [[Int]]
+chop8InTermsOfUnfold = unfold (\x -> length x == 0) (take 8) (drop 8)
+
+mapInTermsOfUnfold :: (a -> b) -> ([a] -> [b])
+mapInTermsOfUnfold f = unfold (\x -> length x == 0) (f . head) (tail)
+
+iterateInTermsOfUnfold :: (a -> a) -> a -> [a]
+iterateInTermsOfUnfold f = unfold (\x -> False) (\x -> x) (f)
+
+-- Exercise 9
+
+altMap :: (a -> b) -> (a -> b) -> [a] -> [b]
+altMap f g xs = [if index `mod` 2 == 0 then f x else g x | (index, x) <- zip [0..] xs]
