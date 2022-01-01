@@ -1,3 +1,4 @@
+import Prelude hiding (Nat, Maybe, Nothing, Just)
 
 data Nat = Zero | Succ Nat
   deriving (Show)
@@ -73,4 +74,32 @@ halve xs = ((take k xs), (drop k xs))
 balance :: [a] -> NewTree a
 balance [x] = NewLeaf x
 balance xs = NewNode (balance l) (balance r)
-             where (l, r) = halve xs:q
+              where (l, r) = halve xs
+
+-- Exercise 5
+
+data Expr = Val Int | Add Expr Expr
+
+folde :: (Int -> a) -> (a -> a -> a) -> Expr -> a
+folde f g (Val x) = f x
+folde f g (Add x y) = g (folde f g x) (folde f g y)
+
+-- Exercise 6
+
+eval :: Expr -> Int
+eval (Val x) = x
+eval (Add x y) = (eval x) + (eval y)
+
+-- Exercise 7
+data Maybe a = Nothing | Just a
+
+instance Eq a => Eq (Maybe a) where
+  Nothing == Nothing = True
+  Just x == Just y = x == y
+  _ == _ = False
+
+-- doesn't compile because it is duplicated
+--instance Eq a => Eq [a] where
+--  [] == [] = True
+--  (x:xs) == (y:ys) = x == y && xs == ys
+--  _ == _ = False
