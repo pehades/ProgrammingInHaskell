@@ -2,6 +2,10 @@
 main :: IO ()
 main = print (solutions' [1, 3, 7, 10, 25, 50] 765)
 
+-- The below are for exercise 4
+--main = print (possibleExpressionsOfExample)
+--main = print (successfulExpressionsOfExample)
+
 data Op = Add | Sub | Mul | Div
 
 instance Show Op where
@@ -107,3 +111,12 @@ combine' (l, x) (r, y) =
 
 solutions' :: [Int] -> Int -> [Expr]
 solutions' ns n = [e | ns' <- choices ns, (e, m) <- results ns', m == n]
+
+
+example = [1, 3, 7, 10, 25, 50]
+
+possibleExpressionsOfExample = length [e | cs <- choices example,
+                                           e <- exprs cs]
+
+successfulExpressionsOfExample = length [e | cs <- choices example,
+                                             e <- exprs cs, eval e /= []]
