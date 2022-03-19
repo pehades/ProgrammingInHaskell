@@ -1,6 +1,7 @@
 module ParserFile (
 Parser, parse, item, sat, digit, lower, upper, char, string,
-ident, space, nat, int, many, some) where
+ident, space, nat, int, many, some, token, identifier, natural,
+integer, symbol, nats) where
 
 import Data.Char
 import Data.List
@@ -96,7 +97,7 @@ char a = sat ( ==a)
 
 string :: String -> Parser String
 string [] = return []
-string (x:xs) = do a <- item
+string (x:xs) = do a <- char x
                    b <- string xs
                    return (x:xs)
 
@@ -118,4 +119,28 @@ int = do (char '-')
          return (-n)
          <|> nat
 
+token :: Parser a -> Parser a
+token p = do space
+             v <- p
+             space
+             return v
 
+identifier :: Parser String
+identifier = token ident
+
+natural :: Parser Int
+natural = token nat
+
+integer :: Parser Int
+integer = token int
+
+symbol :: String -> Parser String
+symbol xs = token (string xs)
+
+nats :: Parser [Int]
+nats = do symbol "["
+          n <- natural
+          ns <- many (do symbol ","
+                         natural)
+          symbol "]"
+          return (n:ns)
