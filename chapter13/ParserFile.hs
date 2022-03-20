@@ -1,7 +1,7 @@
 module ParserFile (
 Parser, parse, item, sat, digit, lower, upper, char, string,
 ident, space, nat, int, many, some, token, identifier, natural,
-integer, symbol, nats, expr, term, factor, eval) where
+integer, symbol, nats) where
 
 import Data.Char
 import Data.List
@@ -153,29 +153,23 @@ nats = do symbol "["
 --factor := (expr) | nat
 --nat := 0 | 1 | ...
 
-expr :: Parser Int
-expr = do t <- term
-          do symbol "+"
-             e <- expr
-             return (t + e)
-           <|> return t
-
-term :: Parser Int
-term = do f <- factor
-          do symbol "*"
-             t <- term
-             return (f * t)
-           <|> return f
-
-factor :: Parser Int
-factor = do symbol "("
-            e <- expr
-            symbol ")"
-            return e
-           <|> natural
-
-eval :: String -> Int
-eval xs = case (parse expr xs) of
-            [(n, [])] -> n
-            [(_, out)] -> error ("Unused input" ++ out)
-            [] -> error "Invalid Input"
+--expr :: Parser Int
+--expr = do t <- term
+--          do symbol "+"
+--             e <- expr
+--             return (t + e)
+--           <|> return t
+--
+--term :: Parser Int
+--term = do f <- factor
+--          do symbol "*"
+--             t <- term
+--             return (f * t)
+--           <|> return f
+--
+--factor :: Parser Int
+--factor = do symbol "("
+--            e <- expr
+--            symbol ")"
+--            return e
+--          <|> natural
